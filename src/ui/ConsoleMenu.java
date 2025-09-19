@@ -28,7 +28,7 @@ public class ConsoleMenu {
                 case "7" -> giveOutBook();
                 case "8" -> returnBook();
                 case "9" -> Library.displaygiveOutBooks();
-                case "Q" -> System.exit(0);
+                case "Q", "q" -> System.exit(0);
                 default -> displayMenu();
              }
         }
@@ -83,7 +83,7 @@ public class ConsoleMenu {
 
     // Найти книгу по параметрам. Если параметр не известен, вводим пустую строку
     private void findBooks() {
-        String title, author;
+/**        String title, author;
         int year;
         HashMap<Integer, Book> booksFind;
         try {
@@ -101,7 +101,38 @@ public class ConsoleMenu {
             Library.displayBooks(booksFind);
         } catch (Exception e) {
             System.out.println(e.getMessage());
+        }*/
+        HashMap<Integer, Book> booksFind;
+        try {
+            booksFind = CheckBooks();
+            if (booksFind != null) {
+                Library.displayBooks(booksFind);
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
+    }
+
+    private HashMap<Integer, Book> CheckBooks() {
+        String title, author;
+        int year;
+        HashMap<Integer, Book> booksFind = null;
+        try {
+            title = GetValue("Название книги:");
+            author = GetValue("ФИО автора:");
+            try {
+                year = Integer.parseInt(GetValue("Год издания:"));
+            } catch (NumberFormatException e) {
+                year = 0;
+            }
+            if ((title == null || title.isBlank()) && (author == null || author.isBlank()) && year == 0) {
+                throw new InvalidSearchParamException();
+            }
+            booksFind = Library.findBooks(title, author, year);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return booksFind;
     }
 
     // Найти пользователя по ID.

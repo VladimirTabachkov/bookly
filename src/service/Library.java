@@ -29,9 +29,13 @@ public class Library {
     }
 
     public static HashMap<Integer, Book> findBooks(String title, String author, int year) {
+        HashMap<Integer, Book> o = null;
+        return o;
     }
 
     public static HashMap<Integer, User> findUsers(int id, String FIO, String email) {
+        HashMap<Integer, User> o = null;
+        return o;
     }
 
     public static void displaygiveOutBooks() {
