@@ -11,7 +11,7 @@ import java.util.Scanner;
 
 public class ConsoleMenu {
     private final Scanner scanner = new Scanner(System.in);
-    Library library = new Library();
+    Library library = Library.createLibrary();
 
     public void start() {
         System.out.println("Добро пожаловать в электронную библиотеку!");
@@ -25,9 +25,6 @@ public class ConsoleMenu {
                 case "4" -> Library.displayUsers();
                 case "5" -> findBooks();
                 case "6" -> findUsers();
-                case "7" -> giveOutBook();
-                case "8" -> returnBook();
-                case "9" -> Library.displaygiveOutBooks();
                 case "Q", "q" -> System.exit(0);
                 default -> displayMenu();
              }
@@ -41,9 +38,6 @@ public class ConsoleMenu {
         System.out.println("4. Просмотр всех читателей");
         System.out.println("5. Поиск книг по: названию, автору, году");
         System.out.println("6. Поиск пользователя по ID");
-        System.out.println("7. Выдача книги");
-        System.out.println("8. Возврат книги");
-        System.out.println("9. Просмотр всех выданных книг");
         System.out.println("Q. Выход");
     }
 
@@ -83,25 +77,6 @@ public class ConsoleMenu {
 
     // Найти книгу по параметрам. Если параметр не известен, вводим пустую строку
     private void findBooks() {
-/**        String title, author;
-        int year;
-        HashMap<Integer, Book> booksFind;
-        try {
-            title = GetValue("Название книги:");
-            author = GetValue("ФИО автора:");
-            try {
-                year = Integer.parseInt(GetValue("Год издания:"));
-            } catch (NumberFormatException e) {
-                year = 0;
-            }
-            if ((title == null || title.isBlank()) && (author == null || author.isBlank()) && year == 0) {
-                throw new InvalidSearchParamException();
-            }
-            booksFind = Library.findBooks(title, author, year);
-            Library.displayBooks(booksFind);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }*/
         HashMap<Integer, Book> booksFind;
         try {
             booksFind = CheckBooks();
@@ -137,8 +112,20 @@ public class ConsoleMenu {
 
     // Найти пользователя по ID.
     private void findUsers() {
-        int id;
         HashMap<Integer, User> usersFind;
+        try {
+            usersFind = CheckUser();
+            if (usersFind != null) {
+                Library.displayUsers(usersFind);
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private HashMap<Integer, User> CheckUser() {
+        HashMap<Integer, User> usersFind = null;
+        int id;
         try {
             try {
                 id = Integer.parseInt(GetValue("ID читателя:"));
@@ -149,19 +136,10 @@ public class ConsoleMenu {
                 throw new InvalidSearchUserIDException();
             }
             usersFind = Library.findUsers(id, null, null);
-            Library.displayUsers(usersFind);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-    }
-
-    // Выдача книги читателю
-    private void giveOutBook() {
-
-    }
-
-    // Возврат книги читателем
-    private void returnBook() {
+        return usersFind;
     }
 
     private String GetValue(String s) {
