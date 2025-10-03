@@ -59,6 +59,10 @@ public class Library {
     }
 
     public static void addBook(String title, String author, int year, int totalCopies) {
+        if (title == null || title.trim().isEmpty() || author == null || author.trim().isEmpty()) {
+            throw new IllegalArgumentException("Не заданы автор и название книги");
+        }
+
         Book book = new Book(title, author, year, totalCopies);
         HashMap<Integer, Book> findBooks;
         findBooks = Library.findBooks(title, author, year);
@@ -83,6 +87,9 @@ public class Library {
     }
 
     public static void addUser(String name, String email) {
+        if (name == null || name.trim().isEmpty() || email == null || email.trim().isEmpty()) {
+            throw new IllegalArgumentException("Не задано ФИО читателя и его e-mail");
+        }
         User user = new User(name, email);
         users.put(user.getId(), user);
     }
@@ -114,8 +121,8 @@ public class Library {
     public static HashMap<Integer, Book> findBooks(String title, String author, int year) {
         HashMap<Integer, Book> booksFind = new HashMap<>();
         for (Book book : books.values()) {
-            if (((title != null && !title.isBlank() && book.getTitle().toUpperCase().matches(".*" + title.toUpperCase() + ".*")) || (title == null || title.isBlank())) &&
-                ((author != null && !author.isBlank() && book.getAuthor().toUpperCase().matches(".*" + author.toUpperCase() + ".*")) || (author == null || author.isBlank())) &&
+            if (((title != null && !title.isBlank() && book.getTitle().toUpperCase().contains(title.toUpperCase())) || (title == null || title.isBlank())) &&
+                ((author != null && !author.isBlank() && book.getAuthor().toUpperCase().contains(author.toUpperCase())) || (author == null || author.isBlank())) &&
                 ((year != 0 && book.getYear() == year) || year == 0)
                ) {
                     booksFind.put(book.getId(), book);
@@ -126,12 +133,12 @@ public class Library {
 
     public static HashMap<Integer, User> findUsers(int id, String FIO, String email) {
         HashMap<Integer, User> usersFind = new HashMap<>();
-        if (id != 0 & users.containsKey(id)) {
+        if (id != 0 && users.containsKey(id)) {
             usersFind.put(id, users.get(id));
         } else {
         for (User user : users.values()) {
-            if (((FIO != null && !FIO.isBlank() && user.getName().toUpperCase().matches(".*" + FIO.toUpperCase() + ".*")) || (FIO == null || FIO.isBlank())) &&
-                ((email != null && !email.isBlank() && user.getEmail().toUpperCase().matches(".*" + email.toUpperCase() + ".*")) || (email == null || email.isBlank()))
+            if (((FIO != null && !FIO.isBlank() && user.getName().toUpperCase().contains(FIO.toUpperCase())) || (FIO == null || FIO.isBlank())) &&
+                ((email != null && !email.isBlank() && user.getEmail().toUpperCase().contains(email.toUpperCase())) || (email == null || email.isBlank()))
                ) {
                     usersFind.put(user.getId(), user);
                }
