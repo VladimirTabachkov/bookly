@@ -3,8 +3,7 @@ import ui.ConsoleMenu;
 
 public class Main {
     public static void main(String[] args) {
-        Library library = Library.createLibrary();
-        library.init();
+//        Library.createLibrary();
         ConsoleMenu consoleMenu = new ConsoleMenu();
         consoleMenu.start();
     }

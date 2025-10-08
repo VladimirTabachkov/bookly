@@ -1,5 +1,7 @@
 package model;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class Book {
     private final int id;
     private String title;
@@ -7,16 +9,15 @@ public class Book {
     private int year;
     private int totalCopies;
     private int availableCopies;
-    private static int counter = 1;
+    private static AtomicInteger counter = new AtomicInteger(1);
 
     public Book(String title, String author, int year, int totalCopies) {
-        this.id = counter;
+        this.id = counter.getAndIncrement();
         this.title = title;
         this.author = author;
         this.year = year;
         this.totalCopies = totalCopies;
         this.availableCopies = totalCopies;
-        counter++;
     }
 
     public int getId() {

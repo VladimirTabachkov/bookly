@@ -11,7 +11,7 @@ import java.util.Map;
 
 public class Library {
 
-    static final Map<Integer, Book> books = new HashMap<>();
+    private static final Map<Integer, Book> books = new HashMap<>();
     private static final Map<Integer, User> users = new HashMap<>();
 
     private static final String fileNameBook  = "src/data/books.txt";
@@ -21,18 +21,18 @@ public class Library {
     }
 
     public static Library createLibrary() {
-        return new Library();
+        Library library = new Library();
+        library.init();
+        return library;
     }
 
-    public static void init() {
+    public void init() {
         loadTableFromDB(fileNameBook, "BOOKS");
         loadTableFromDB(fileNameUser, "USERS");
     }
 
-    private static void loadTableFromDB(String fileName, String tableNane) {
-        String line;
-        String delimetr = ";";
-        switch (tableNane) {
+    private void loadTableFromDB(String fileName, String tableName) {
+        switch (tableName) {
             case "BOOKS":
                 books.clear();
                 break;
@@ -40,13 +40,14 @@ public class Library {
                 users.clear();
                 break;
             default:
-                throw new IllegalStateException("Unexpected value: " + tableNane);
+                throw new IllegalStateException("Unexpected value: " + tableName);
         }
 
+        String line;
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             while ((line = br.readLine()) != null) {
-                String[] data = line.split(delimetr);
-                if (tableNane == "BOOKS") {
+                String[] data = line.split(";");
+                if (tableName == "BOOKS") {
                     addBook(data[0], data[1], Integer.parseInt(data[2]), Integer.parseInt(data[3]));
                 }
                 else {
@@ -58,14 +59,14 @@ public class Library {
         }
     }
 
-    public static void addBook(String title, String author, int year, int totalCopies) {
+    public void addBook(String title, String author, int year, int totalCopies) {
         if (title == null || title.trim().isEmpty() || author == null || author.trim().isEmpty()) {
             throw new IllegalArgumentException("Не заданы автор и название книги");
         }
 
         Book book = new Book(title, author, year, totalCopies);
         HashMap<Integer, Book> findBooks;
-        findBooks = Library.findBooks(title, author, year);
+        findBooks = this.findBooks(title, author, year);
         if (findBooks.size() == 0) {
             // если не нашли - то добавляем
             books.put(book.getId(), book);
@@ -86,7 +87,7 @@ public class Library {
         }
     }
 
-    public static void addUser(String name, String email) {
+    public void addUser(String name, String email) {
         if (name == null || name.trim().isEmpty() || email == null || email.trim().isEmpty()) {
             throw new IllegalArgumentException("Не задано ФИО читателя и его e-mail");
         }
@@ -94,11 +95,11 @@ public class Library {
         users.put(user.getId(), user);
     }
 
-    public static void displayBooks(){
+    public void displayBooks(){
         displayBooks((HashMap<Integer, Book>) books);
     }
 
-    public static void displayBooks(HashMap<Integer, Book> booksFind) {
+    public void displayBooks(HashMap<Integer, Book> booksFind) {
         System.out.printf("Найдено книг: %d\n", booksFind.size());
         System.out.println("Список:");
         for (Map.Entry<Integer, Book> entry : booksFind.entrySet()) {
@@ -106,11 +107,11 @@ public class Library {
         }
     }
 
-    public static void displayUsers() {
+    public void displayUsers() {
         displayUsers((HashMap<Integer, User>) users);
     }
 
-    public static void displayUsers(HashMap<Integer, User> usersFind) {
+    public void displayUsers(HashMap<Integer, User> usersFind) {
         System.out.printf("Найдено читателей : %d\n", usersFind.size());
         System.out.println("Список:");
         for (Map.Entry<Integer, User> entry : usersFind.entrySet()) {
@@ -118,7 +119,7 @@ public class Library {
         }
     }
 
-    public static HashMap<Integer, Book> findBooks(String title, String author, int year) {
+    public HashMap<Integer, Book> findBooks(String title, String author, int year) {
         HashMap<Integer, Book> booksFind = new HashMap<>();
         for (Book book : books.values()) {
             if (((title != null && !title.isBlank() && book.getTitle().toUpperCase().contains(title.toUpperCase())) || (title == null || title.isBlank())) &&
@@ -131,7 +132,7 @@ public class Library {
         return booksFind;
     }
 
-    public static HashMap<Integer, User> findUsers(int id, String FIO, String email) {
+    public HashMap<Integer, User> findUsers(int id, String FIO, String email) {
         HashMap<Integer, User> usersFind = new HashMap<>();
         if (id != 0 && users.containsKey(id)) {
             usersFind.put(id, users.get(id));

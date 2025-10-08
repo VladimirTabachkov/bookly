@@ -21,8 +21,8 @@ public class ConsoleMenu {
             switch (choice) {
                 case "1" -> addBook();
                 case "2" -> addUser();
-                case "3" -> Library.displayBooks();
-                case "4" -> Library.displayUsers();
+                case "3" -> library.displayBooks();
+                case "4" -> library.displayUsers();
                 case "5" -> findBooks();
                 case "6" -> findUsers();
                 case "Q", "q" -> System.exit(0);
@@ -46,11 +46,11 @@ public class ConsoleMenu {
         String title, author;
         int year, totalCopies;
         try {
-            title = GetValue("Название книги:");
-            author = GetValue("ФИО автора:");
-            year = Integer.parseInt(GetValue("Год издания:"));
-            totalCopies = Integer.parseInt(GetValue("Количество копий:"));
-            Library.addBook(title, author, year, totalCopies);
+            title = getValue("Название книги:");
+            author = getValue("ФИО автора:");
+            year = Integer.parseInt(getValue("Год издания:"));
+            totalCopies = Integer.parseInt(getValue("Количество копий:"));
+            library.addBook(title, author, year, totalCopies);
             System.out.println("Книга добавлена");
         } catch (NumberFormatException e) {
             System.out.println("Не верные год издания или количество копий");
@@ -63,9 +63,9 @@ public class ConsoleMenu {
     private void addUser() {
         String name, email;
         try {
-            name = GetValue("ФИО читателя:");
-            email = GetValue("E-Mail читателя:");
-            Library.addUser(name, email);
+            name = getValue("ФИО читателя:");
+            email = getValue("E-Mail читателя:");
+            library.addUser(name, email);
             System.out.println("Читатель добавлен");
         } catch (NumberFormatException e) {
             System.out.println(e.getMessage());
@@ -79,31 +79,31 @@ public class ConsoleMenu {
     private void findBooks() {
         HashMap<Integer, Book> booksFind;
         try {
-            booksFind = CheckBooks();
+            booksFind = checkBooks();
             if (booksFind != null) {
-                Library.displayBooks(booksFind);
+                library.displayBooks(booksFind);
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
 
-    private HashMap<Integer, Book> CheckBooks() {
+    private HashMap<Integer, Book> checkBooks() {
         String title, author;
         int year;
         HashMap<Integer, Book> booksFind = null;
         try {
-            title = GetValue("Название книги:");
-            author = GetValue("ФИО автора:");
+            title = getValue("Название книги:");
+            author = getValue("ФИО автора:");
             try {
-                year = Integer.parseInt(GetValue("Год издания:"));
+                year = Integer.parseInt(getValue("Год издания:"));
             } catch (NumberFormatException e) {
                 year = 0;
             }
             if ((title == null || title.isBlank()) && (author == null || author.isBlank()) && year == 0) {
                 throw new InvalidSearchParamException();
             }
-            booksFind = Library.findBooks(title, author, year);
+            booksFind = library.findBooks(title, author, year);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -114,35 +114,35 @@ public class ConsoleMenu {
     private void findUsers() {
         HashMap<Integer, User> usersFind;
         try {
-            usersFind = CheckUser();
+            usersFind = checkUser();
             if (usersFind != null) {
-                Library.displayUsers(usersFind);
+                library.displayUsers(usersFind);
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
 
-    private HashMap<Integer, User> CheckUser() {
+    private HashMap<Integer, User> checkUser() {
         HashMap<Integer, User> usersFind = null;
         int id;
         try {
             try {
-                id = Integer.parseInt(GetValue("ID читателя:"));
+                id = Integer.parseInt(getValue("ID читателя:"));
             } catch (NumberFormatException e) {
                 id = 0;
             }
             if (id == 0) {
                 throw new InvalidSearchUserIDException();
             }
-            usersFind = Library.findUsers(id, null, null);
+            usersFind = library.findUsers(id, null, null);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
         return usersFind;
     }
 
-    private String GetValue(String s) {
+    private String getValue(String s) {
         System.out.print(s);
         return scanner.nextLine();
     }

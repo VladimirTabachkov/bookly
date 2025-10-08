@@ -1,16 +1,18 @@
 package model;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class User {
     private final int id;
     private String name;
     private String email;
-    private static int counter = 1;
+    private static AtomicInteger counter = new AtomicInteger(1);
+
 
     public User(String name, String email) {
-        this.id = counter;
+        this.id = counter.getAndIncrement();
         this.name = name;
         this.email = email;
-        counter++;
     }
 
     public int getId() {
