@@ -46,10 +46,10 @@ public class ConsoleMenu {
         String title, author;
         int year, totalCopies;
         try {
-            title = getValue("Название книги:");
-            author = getValue("ФИО автора:");
-            year = Integer.parseInt(getValue("Год издания:"));
-            totalCopies = Integer.parseInt(getValue("Количество копий:"));
+            title = getStringValue("Название книги:");
+            author = getStringValue("ФИО автора:");
+            year = Integer.parseInt(getStringValue("Год издания:"));
+            totalCopies = Integer.parseInt(getStringValue("Количество копий:"));
             library.addBook(title, author, year, totalCopies);
             System.out.println("Книга добавлена");
         } catch (NumberFormatException e) {
@@ -63,8 +63,8 @@ public class ConsoleMenu {
     private void addUser() {
         String name, email;
         try {
-            name = getValue("ФИО читателя:");
-            email = getValue("E-Mail читателя:");
+            name = getStringValue("ФИО читателя:");
+            email = getStringValue("E-Mail читателя:");
             library.addUser(name, email);
             System.out.println("Читатель добавлен");
         } catch (NumberFormatException e) {
@@ -93,10 +93,10 @@ public class ConsoleMenu {
         int year;
         HashMap<Integer, Book> booksFind = null;
         try {
-            title = getValue("Название книги:");
-            author = getValue("ФИО автора:");
+            title = getStringValue("Название книги:");
+            author = getStringValue("ФИО автора:");
             try {
-                year = Integer.parseInt(getValue("Год издания:"));
+                year = Integer.parseInt(getStringValue("Год издания:"));
             } catch (NumberFormatException e) {
                 year = 0;
             }
@@ -128,7 +128,7 @@ public class ConsoleMenu {
         int id;
         try {
             try {
-                id = Integer.parseInt(getValue("ID читателя:"));
+                id = Integer.parseInt(getStringValue("ID читателя:"));
             } catch (NumberFormatException e) {
                 id = 0;
             }
@@ -142,7 +142,7 @@ public class ConsoleMenu {
         return usersFind;
     }
 
-    private String getValue(String s) {
+    private String getStringValue(String s) {
         System.out.print(s);
         return scanner.nextLine();
     }
